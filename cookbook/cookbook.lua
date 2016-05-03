@@ -1,5 +1,6 @@
 -- aplicação para contar quantidades de palavras que ocorrem num texto - estilo cookbook (cap.4)
 -- Pedro Nascimento - 1213243
+-- Data: 03/05/2016
 
 --ANOTAÇÔES
 -- As maiores dificuldades foram:
@@ -9,26 +10,41 @@
 
 -- O tempo total demorou 5 horas para a solução estar satisfeita
 -- a estrutura da aplicação preservou bastante da notação do código do livro texto,
--- os nomes das variaveis em função seguiu o padrão pep8
+-- a aplicação seguiu o padrão pep8, cujo o mesmo é feito no livro texto
 
-text = ""
+text = "" 
 stop_words_lis = {}
 count_word = {}
 sorted = {}
 
 
 function read_file()
-file = io.open("words.txt")
+-- lê o arquivo que contém o texto alvo da aplicação
+-- pré-condição a abertura do arquivo está correta
+-- pós-condição o texto extraído tem tamanho maior que 0
+file = assert(io.open("words.txt"), "erro na abertura do arquivo")
 text = file:read("*all") --extract words
+assert(#text>0, "error, texto vazio")
 end
 
 function filter_chars_and_normalize()
+-- filtra o texto retirando os Carriage Return , virgulas e pontos
+-- pré condição: texto cru
+-- pós-condição: texto filtrado
 text = string.lower(text)
-text = string.gsub(text, "%s", ' ')
+text = string.gsub(text, "%s", ' ') -- troca \n por espaços em brancos
+text = string.gsub(text, "%,", "")
+text = string.gsub(text, "%.", "")
+assert(string.gsub(text, "%u", function () assert("letra maiuscula detectada, filtro errado") end))
+assert(string.gsub(text, "%.", function () assert("virgula detectada, filtro errado") end))
+assert(string.gsub(text, "%,", function () assert("ponto detectada, filtro errado") end))
 end
 
 function scan()
-stop_words_file = io.open("stop_words.txt")
+-- lê stop words, palavras que são vazias de significado
+-- pré-condição, lista de texto com stop words
+-- pós-condição, table com valores de stop words
+stop_words_file = assert(io.open("stop_words.txt"), "erro na abertura de arquivo de stop_words")
 stop_words = stop_words_file:read("*all")
 stop_words_lis = {}
 i=1
@@ -36,19 +52,23 @@ i=1
 	 stop_words_lis[i] =value
 	 i= i +1 
 	end
- -- for i =1 , #stop_words_lis do
- -- print(stop_words_lis[i])
- -- end
-end
+	assert(#stop_words_lis >0 , "erro lista de stop words vazio")
+ end
 
 function remove_stop_words()
+-- remove stop words do texto
+-- pré-condição: texto filtrado e table de stop_words
+-- pós-condição: texto com palavras removidas 
 for i = 1, #stop_words_lis do
 text = string.gsub(text, "(%s"..stop_words_lis[i].."[%s|%x| %,]", ' ' )
-text = string.gsub(text, ",", "")
+	
 end
 end
 
 function frequencies()
+-- conta a quantidade que o texto aparece na busca
+-- pré-cond: texto sem stop words
+-- pós-cond: palavras contadas num array associativo (key, frequencia)
 text = string.gsub(text, "%a*[^%s]", 
 					function (w) 
 						if count_word[w]==nil then
@@ -57,13 +77,13 @@ text = string.gsub(text, "%a*[^%s]",
 							count_word[w]= count_word[w]+1
 						end
 					end)
-
--- for key,value in pairs(count_word) do
-    -- print("word ".. key.." has " .. value);
--- end
+					assert(count_word ~= nil , "erro count_word vazio") -- count_word deve ser diferente de nil
 end
 
 function sort()
+-- ordena as palavras em ordem decrescente de frequencia em um array
+-- pré-cond: vetor associativo de frequencia de palavras
+-- pós-cond: array ordenado com as respectivas palavras e valor de frequencia
 	i = 1
 	for key,value in pairs(count_word) do
 		sorted[i] = {key , value}
@@ -71,17 +91,20 @@ function sort()
 	end
 	
 	table.sort(sorted, function (a,b) return a[2] >b[2] end)
-	
+end
+
+function main ()
+	read_file()
+	filter_chars_and_normalize()
+	scan()
+	remove_stop_words()
+	frequencies()
+	sort()
+
 	for i= 1, #sorted  do
-		print(sorted[i][1] .. " " .. sorted[i][2]);
+	print(sorted[i][1] .. " " .. sorted[i][2]);
 	end
 end
 
-read_file()
-filter_chars_and_normalize()
-scan()
-remove_stop_words()
-frequencies()
-sort()
-
+main()
 --FIM 
