@@ -22,7 +22,7 @@ function read_file()
 -- lê o arquivo que contém o texto alvo da aplicação
 -- pré-condição a abertura do arquivo está correta
 -- pós-condição o texto extraído tem tamanho maior que 0
-file = assert(io.open("words.txt"), "erro na abertura do arquivo")
+file = assert(io.open("input/words.txt"), "erro na abertura do arquivo")
 text = file:read("*all") --extract words
 assert(#text>0, "error, texto vazio")
 end
@@ -44,7 +44,7 @@ function scan()
 -- lê stop words, palavras que são vazias de significado
 -- pré-condição, lista de texto com stop words
 -- pós-condição, table com valores de stop words
-stop_words_file = assert(io.open("stop_words.txt"), "erro na abertura de arquivo de stop_words")
+stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de arquivo de stop_words")
 stop_words = stop_words_file:read("*all")
 stop_words_lis = {}
 i=1
