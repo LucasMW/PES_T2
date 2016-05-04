@@ -48,7 +48,7 @@ stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de a
 stop_words = stop_words_file:read("*all")
 stop_words_lis = {}
 i=1
-	for value in string.gmatch(stop_words, "%w+[\']*%w*") do
+	for value in string.gmatch(stop_words, "[^,]+") do
 	 stop_words_lis[i] =value
 	 i= i +1 
 	end
@@ -101,8 +101,8 @@ function main ()
 	frequencies()
 	sort()
 
-	for i= 1, #sorted  do
-	print(sorted[i][1] .. " " .. sorted[i][2]);
+	for i= 1, math.min(#sorted, 25)  do
+		print(sorted[i][1] .. " " .. sorted[i][2]);
 	end
 end
 
