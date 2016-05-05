@@ -1,5 +1,22 @@
 
 
+TFTheOne = { value=0 }
+
+
+ function TFTheOne:init(self, v)
+        self._value = v
+ end
+
+
+ function TFTheOne:bind(self, func)
+        self._value = func(self._value)
+        return self
+ end
+
+
+ function TFTheOne:printme(self)
+        -- print self._value
+ end
 -- #
 -- # The functions
 -- #
