@@ -1,45 +1,26 @@
-local function reverse_split(str, pattern)
-	local iterator = str:gmatch(pattern)
-	local parts = {}
-	for part in iterator do
-		parts[#parts+1] = part
-	end
-	return parts
+function read_file(path_to_file)
+	-- lê o arquivo que contém o texto alvo da aplicação
+	-- pré-condição a abertura do arquivo está correta
+	-- pós-condição o texto extraído tem tamanho maior que 0
+	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
+	text = file:read("*all")
+	assert(#text>0, "error, texto vazio")
+	return text
 end
 
-local function print_text(word_tuples) -- faz nada
-	for i, word_tuple in ipairs(word_tuples) do
-		if i > 25 then break end
-		print(table.concat(word_tuple, " - "))
-	end
-	return nil
+function normalize(str_data)
+	return str_data:lower()
 end
 
-local function sort(words_frequency)
-	local word_tuples = {}
-	for word, frequency in pairs(words_frequency) do
-		word_tuples[#word_tuples+1] = {word, frequency}
-	end
-	table.sort(word_tuples, function(word_tuple1, word_tuple2)
-		return word_tuple1[2] > word_tuple2[2]
-	end)
-	return word_tuples
+function filter_chars(str_data)
+	return str_data:gsub("[%W_]", " ")
 end
 
-local function frequencies(word_list)
-	local words_frequency = {}
-	for i=1, #word_list do
-		local word = word_list[i]
-		if words_frequency[word] then
-			words_frequency[word] = words_frequency[word] + 1
-		else
-			words_frequency[word] = 1
-		end
-	end
-	return words_frequency
+function scan(str_data)
+	return reverse_split(str_data, "%S+")
 end
 
-local function remove_stop_words(word_list)
+function remove_stop_words(word_list)
 	local stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de arquivo de stop_words")
 	local stop_words = reverse_split(stop_words_file:read("*all"), "[^,]+")
 	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
@@ -62,26 +43,45 @@ local function remove_stop_words(word_list)
 	return new_word_list
 end
 
-local function scan(str_data)
-	return reverse_split(str_data, "%S+")
+function frequencies(word_list)
+	local words_frequency = {}
+	for i=1, #word_list do
+		local word = word_list[i]
+		if words_frequency[word] then
+			words_frequency[word] = words_frequency[word] + 1
+		else
+			words_frequency[word] = 1
+		end
+	end
+	return words_frequency
 end
 
-local function filter_chars(str_data)
-	return str_data:gsub("[%W_]", " ")
+function sort(words_frequency)
+	local word_tuples = {}
+	for word, frequency in pairs(words_frequency) do
+		word_tuples[#word_tuples+1] = {word, frequency}
+	end
+	table.sort(word_tuples, function(word_tuple1, word_tuple2)
+		return word_tuple1[2] > word_tuple2[2]
+	end)
+	return word_tuples
 end
 
-local function normalize(str_data)
-	return str_data:lower()
+function print_text(word_tuples) -- faz nada
+	for i, word_tuple in ipairs(word_tuples) do
+		if i > 25 then break end
+		print(table.concat(word_tuple, " - "))
+	end
+	return nil
 end
 
-local function read_file(path_to_file)
-	-- lê o arquivo que contém o texto alvo da aplicação
-	-- pré-condição a abertura do arquivo está correta
-	-- pós-condição o texto extraído tem tamanho maior que 0
-	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
-	text = file:read("*all")
-	assert(#text>0, "error, texto vazio")
-	return text
+function reverse_split(str, pattern)
+	local iterator = str:gmatch(pattern)
+	local parts = {}
+	for part in iterator do
+		parts[#parts+1] = part
+	end
+	return parts
 end
 
 print_text(sort(frequencies(remove_stop_words(scan(normalize(filter_chars(read_file("input/words.txt"))))))))
