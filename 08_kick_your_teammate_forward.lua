@@ -32,6 +32,9 @@ function filter_chars_and_normalize(text, continuation) -- scan
 end
 
 function scan(text, continuation) -- remove_stop_words
+	-- separa a string pelos espaços em uma table de strings menores
+	-- pré-condição o texto de entrada tenha tamanho maior que 0 
+	-- pós-condição a table tem tamanho maior que 0
 
 	local words = split(text, "%S+")
 	assert(#words>0, "erro, array vazio")
@@ -39,6 +42,9 @@ function scan(text, continuation) -- remove_stop_words
 end
 
 function remove_stop_words(words, continuation) -- sorted_frequencies
+	-- recebe uma table de strings e retorna uma com as stop words removidas
+	-- pré-condição a table tem tamanho maior que 0
+	-- pós-condição nenhum valor da table está na lista de stop_words
 	local file = io.open("input/stop_words.txt")
 	local stop_words = split(file:read("*all"), "[^,]+")
 	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
