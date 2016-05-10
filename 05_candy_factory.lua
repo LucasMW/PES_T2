@@ -68,7 +68,7 @@ function read_file(path_to_file)
 	return file:read("*all")
 end
 
-function frequencies(words)
+function count_frequencies(words)
 	-- recebe uma table de indices numeros e valores de strings e retorna uma 
 	--  com indices de string e valores representando a frequencia de sua ocorrencia 
 	--  na table recebida
@@ -125,4 +125,4 @@ function split(str, pattern)
 	return parts
 end
 
-print_text(sort(frequencies(filter_text(read_file("input/words.txt")))))
+print_text(sort(count_frequencies(filter_text(read_file("input/words.txt")))))

@@ -78,7 +78,7 @@ function read_file()
 	text = file:read("*all")
 end
 
-function frequencies()
+function count_frequencies()
 	-- recebe uma table de indices numeros e valores de strings e retorna uma 
 	--  com indices de string e valores representando a frequencia de sua ocorrencia 
 	--  na table recebida
@@ -122,6 +122,6 @@ end
 
 read_file()
 filter_text()
-frequencies()
+count_frequencies()
 sort()
 print_text()

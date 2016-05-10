@@ -34,7 +34,7 @@ FilterText = {
 
 		local words = split(text, "%S+")
 		assert(#words>0, "erro, array vazio")
-		continuation(words, frequencies)
+		continuation(words, count_frequencies)
 	end,
 
 	remove_stop_words = function(words, continuation) -- frequencies
@@ -76,7 +76,7 @@ function read_file(path_to_file, continuation) -- filter_chars
 	continuation(file:read("*all"), FilterText.normalize)
 end
 
-function frequencies(words, continuation) -- sort
+function count_frequencies(words, continuation) -- sort
 	-- recebe uma table de indices numeros e valores de strings e retorna uma 
 	--  com indices de string e valores representando a frequencia de sua ocorrencia 
 	--  na table recebida

@@ -108,7 +108,7 @@ function remove_stop_words(words)
     end
     return new_words
 end
-function frequencies(words)
+function count_frequencies(words)
     -- conta a quantidade que o texto aparece na busca
     -- pré-cond: texto sem stop words
     -- pós-cond: palavras contadas num array associativo (key, frequencia)
@@ -156,7 +156,7 @@ end
     print(arg[1])
     TFTheOne:bind(read_file)
     TFTheOne:bind(filter_text)
-    TFTheOne:bind(frequencies)
+    TFTheOne:bind(count_frequencies)
     TFTheOne:bind(sort)
     TFTheOne:bind(top25_freqs)
     TFTheOne:printme()
