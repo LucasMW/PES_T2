@@ -1,6 +1,7 @@
 
 --[[
     Solução no estilo The One , descrito no capítulo 9.
+
     Existe uma abstração que guarda e envolve os valores,
     se liga às funções para operar os valores e no fim, libera o resultado final.
     Isso faz o problema maior ser resolvido por uma cascata de funções(uma sob o retorno da outra),
@@ -21,9 +22,9 @@ TFTheOne = { value=0 }
     -- exporta o resultado de forma visível ao usuário da aplicação
     -- pré-cond: array de 25 strings no formato palavra - frequencia
     -- pós-cond: valores do array devidamente printados no console
-        for i=1 , #self.value do
-            print(self.value[i] ) 
-        end
+    for i=1 , #self.value do
+        print(self.value[i] ) 
+    end
  end
 
 --  
@@ -152,8 +153,7 @@ end
 --  A função principal (main)
 -- 
 
-    TFTheOne.value = arg[1]
-    print(arg[1])
+    TFTheOne.value = "input/words.txt"
     TFTheOne:bind(read_file)
     TFTheOne:bind(filter_text)
     TFTheOne:bind(count_frequencies)
