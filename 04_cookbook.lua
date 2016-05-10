@@ -11,13 +11,16 @@ local word_frequencies = {}
 
 filter_text = (function()
 	local function filter_chars()
-		-- filtra o texto retirando os Carriage Return , virgulas e pontos
-		-- pré condição: texto cru
-		-- pós-condição: texto filtrado
+		-- filtra o texto retirando os caracters Return , virgula e ponto
+		-- pré-condição o texto extraído tem tamanho maior que 0
+		-- pós-condição o texto não contenha return, vigula ou pontos
 		text = text:gsub("[%W_]", " ")
 	end
 
 	local function normalize()
+		-- transforma todos as letras em minusculas
+		-- pré-condição o texto de entrada tenha tamanho maior que 0 
+		-- pós-condição o texto não contem letras maiusculas
 		text = string.lower(text)
 	end
 
@@ -31,9 +34,9 @@ filter_text = (function()
 	 end
 
 	local function remove_stop_words()
-		-- remove stop words do texto
-		-- pré-condição: texto filtrado e table de stop_words
-		-- pós-condição: texto com palavras removidas 
+		-- recebe uma table de strings e retorna uma com as stop words removidas
+		-- pré-condição a table tem tamanho maior que 0
+		-- pós-condição nenhum valor da table está na lista de stop_words
 		local file = io.open("input/stop_words.txt")
 		local stop_words_text = file:read("*all")
 		for stop_word in string.gmatch(stop_words_text, "[^,]+") do
@@ -76,9 +79,11 @@ function read_file()
 end
 
 function frequencies()
-	-- conta a quantidade que o texto aparece na busca
-	-- pré-cond: texto sem stop words
-	-- pós-cond: palavras contadas num array associativo (key, frequencia)
+	-- recebe uma table de indices numeros e valores de strings e retorna uma 
+	--  com indices de string e valores representando a frequencia de sua ocorrencia 
+	--  na table recebida
+	-- pré-condição a table tem tamanho maior que 0
+	-- pós-condição a table tem tamanho maior que 0, apenas com valores positivos
 	local frequency_hash = {}
 	for i,word in ipairs(words) do
 		if frequency_hash[word] then
@@ -94,12 +99,22 @@ function frequencies()
 end
 
 function sort()
+	-- recebe uma table com indices de string e valores representando a frequencia de 
+	--  sua ocorrencia e retorna uma table de chaves numericas com as strings e sua
+	--  frequencia como valor, ordenada por ordem alfabetica
+	-- pré-condição a table tem tamanho maior que 0, apenas com valores positivos
+	-- pós-condição a tabela esta ordenada pela string que esta no segundo valor da tupla
 	table.sort(word_frequencies, function(word_frequency1, word_frequency2)
 		return word_frequency1[2] > word_frequency2[2]
 	end)
 end
 
 function print_text()
+	-- recebe uma table de chaves numericas com as strings e sua frequencia como
+	--  valor, ordenada por ordem alfabetica e imprime na tela as tuplas palavra
+	--  frequencia
+	-- pré-condição a table tem tamanho maior que 0 e esta ordenada por ordem alfabetica das strings
+	-- pós-condição as strings sao impressas na tela com sua frequencia
 	for i=1, math.min(#word_frequencies, 25)  do
 		print(word_frequencies[i][1] .. " " .. word_frequencies[i][2]);
 	end
