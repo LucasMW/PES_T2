@@ -12,6 +12,7 @@
 	função pode ignorar a função de continuação e mudar o fluxo de execução.
 ]]
 
+--[[ Módulo com as funções responsáveis por preparar o texto para análise de frequência. ]]
 FilterText = {
 	filter_chars = function(text, continuation) -- normalize
 		-- filtra o texto retirando os caracters Return , virgula e ponto

@@ -8,6 +8,7 @@
 	resultado final da maneira mais adequada.
 ]]
 
+--[[ Módulo responsável por preparar o texto para análise de frequência. ]]
 filter_text = (function()
 	local function filter_chars(text)
 		-- filtra o texto retirando os caracters Return , virgula e ponto
@@ -56,6 +57,9 @@ filter_text = (function()
 	end
 
 	return function(text)
+    -- Filtra o texto, tornando-o pronto para a análise de frequência
+    -- pré condição: texto cru
+    -- pós-condição: texto filtrado. Pronto para a análise de frequência
 		return remove_stop_words(scan(normalize(filter_chars(text))))
 	end
 end)()

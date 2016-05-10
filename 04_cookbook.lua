@@ -9,6 +9,7 @@ local text = ""
 local words = {}
 local word_frequencies = {}
 
+--[[ Módulo responsável por preparar o texto para análise de frequência. ]]
 filter_text = (function()
 	local function filter_chars()
 		-- filtra o texto retirando os caracters Return , virgula e ponto
@@ -63,6 +64,9 @@ filter_text = (function()
 	end
 
 	return function()
+    -- Filtra o texto, tornando-o pronto para a análise de frequência
+    -- pré condição: texto cru
+    -- pós-condição: texto filtrado. Pronto para a análise de frequência
 		filter_chars()
 		normalize()
 		scan()
