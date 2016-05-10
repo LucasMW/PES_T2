@@ -125,4 +125,4 @@ function split(str, pattern)
 	return parts
 end
 
-print_text(sort(count_frequencies(filter_text(read_file("input/words.txt")))))
+print_text(sort(count_frequencies(filter_text(read_file("input/text.txt")))))

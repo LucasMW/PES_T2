@@ -74,7 +74,7 @@ function read_file()
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
 	-- pós-condição o texto extraído tem tamanho maior que 0
-	local file = io.open("input/words.txt")
+	local file = io.open("input/text.txt")
 	text = file:read("*all")
 end
 

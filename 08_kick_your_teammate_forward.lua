@@ -138,4 +138,4 @@ function split(str, pattern)
 	return parts
 end
 
-read_file("input/words.txt", FilterText.filter_chars)
+read_file("input/text.txt", FilterText.filter_chars)

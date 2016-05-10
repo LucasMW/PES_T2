@@ -153,7 +153,7 @@ end
 --  A função principal (main)
 -- 
 
-    TFTheOne.value = "input/words.txt"
+    TFTheOne.value = "input/text.txt"
     TFTheOne:bind(read_file)
     TFTheOne:bind(filter_text)
     TFTheOne:bind(count_frequencies)
