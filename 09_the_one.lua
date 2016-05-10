@@ -39,11 +39,11 @@ function read_file(path_to_file)
     return data
 end
 
-function filter_text(str_data)
+function filter_text(text)
     -- Filtra o texto, tornando-o pronto para a análise de frequência
     -- pré condição: texto cru
     -- pós-condição: texto filtrado. Pronto para a análise de frequência
-    local text = filter_chars(str_data)
+    local text = filter_chars(text)
     text = normalize(text)
     local words = scan(text)
     local new_words = remove_stop_words(words)
@@ -51,20 +51,20 @@ function filter_text(str_data)
 
 end
 
-function filter_chars(str_data)
+function filter_chars(text)
     -- filtra o texto retirando os Carriage Return , virgulas e pontos
     -- pré condição: texto cru
     -- pós-condição: texto filtrado. Sem caracteres especiais.
-    local text = str_data:gsub("[%W_]", " ")
+    local text = text:gsub("[%W_]", " ")
     return text
 end
 
 
-function normalize(str_data)
+function normalize(text)
     -- Normaliza a string para problemas de sensitividade de caixa
     -- pré condição: texto filtrado porém sensível à caixa
     -- pós-condição: texto filtrado, em lowercase.
-    return string.lower(str_data)
+    return string.lower(text)
 end
 
 function scan(text)
@@ -107,8 +107,6 @@ function remove_stop_words(words)
         end
     end
     return new_words
-    -- stop_words.extend(list(string.ascii_lowercase))
-    -- return [w for w in word_list if not w in stop_words]
 end
 function frequencies(words)
     -- conta a quantidade que o texto aparece na busca
