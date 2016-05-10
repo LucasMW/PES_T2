@@ -1,20 +1,13 @@
--- aplicação para contar quantidades de palavras que ocorrem num texto - estilo cookbook (cap.4)
--- Pedro Nascimento - 1213243
--- Data: 03/05/2016
+--[[
+	Solução no estilo Cookbook, descrito no capítulo 4.
 
---ANOTAÇÔES
--- As maiores dificuldades foram:
--- não conhecer funções específicas de lua, 
--- trabalhar com Regxp 
--- trabalho para ordenar vetor associativo o que não pode ser feito, então tive que passar para um vetor para depois ordená-lo
+	Este estilo de programação utiliza-se de procedimentos que são executados sequencialmente alterando
+	um estado compartilhado entre eles de maneira que ao final tenhamos as informações desejadas.
+]]
 
--- O tempo total demorou 5 horas para a solução estar satisfeita
--- a estrutura da aplicação preservou bastante da notação do código do livro texto,
--- a aplicação seguiu o padrão pep8, cujo o mesmo é feito no livro texto
 local text = ""
 local words = {}
 local word_freqs = {}
-
 
 function read_file()
 	-- lê o arquivo que contém o texto alvo da aplicação

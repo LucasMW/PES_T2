@@ -1,3 +1,13 @@
+--[[
+	Solução no estilo Candy Factory, descrito no capítulo 5.
+
+	Este estilo de programação é derivado do paradigma funcional, onde
+	as funções não causam efeito colateral umas sobre as outras, porém
+	elas podem ser aninhadas de maneira que o valor retornado em uma
+	seja entrada de outra, até que a última função chamada tratará o
+	resultado final da maneira mais adequada.
+]]
+
 function read_file(path_to_file)
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta

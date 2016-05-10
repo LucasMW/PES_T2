@@ -1,3 +1,17 @@
+--[[
+	Solução no estilo Kick your teammate forward, descrito no capítulo 8.
+
+	Este estilo de programação é uma variação do Candy Factory, porém usando
+	o Continuous Passing Style, que é um estilo de programação funcional onde
+	nenhuma função retorna valor, porém sempre recebe outra função como parâmetro.
+	Esta função recebida como argumento será executada passando o resultado da
+	função corrente.
+
+	Tal técnica é útil na implementação de compiladores ou interpretadores, pois
+	ela dá total controle sobre o fluxo de execução já que à qualquer momento uma
+	função pode ignorar a função de continuação e mudar o fluxo de execução.
+]]
+
 function read_file(path_to_file, do_after) -- filter_chars
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
