@@ -9,13 +9,15 @@ Tomamos cuidado para todo documento ter **título**.
 Todas as funções possuem pré e pós condições, que asseguram seu funcionamento nos contextos esperados.  
 
 ## Regra 3 - Modularização
-Nos asseguramos que as soluções sejam subdivididas em 6 partes, independente do estilo. Para que isto ocorresse, foi necessário efetuar mudanças na estrutura do modelo de código do livro.
+Nos asseguramos que as soluções sejam subdivididas em 4 partes, independente do estilo. Para que isto ocorresse, foi necessário efetuar mudanças na estrutura do modelo de código do livro para que respeitasse a seguinte estrutura:
 ```
 ├── Solução
 |   ├── Ler arquivo
-|   ├── Filtrar e normalizar
-|   ├── Escanear
-|   ├── Remover palavras indesejáveis
+|   ├── Filtrar texto
+|   |   ├── Filtrar caracteres
+|   |   ├── Normalizar
+|   |   ├── Escanear
+|   |   └── Remover palavras indesejáveis
 |   ├── Recuperar palavras ordenadas por frequencia
 |   └── Imprimir resultado
 ```
