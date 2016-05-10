@@ -39,7 +39,17 @@ function read_file(path_to_file)
     return data
 end
 
+function filter_text(str_data)
+    -- Filtra o texto, tornando-o pronto para a análise de frequência
+    -- pré condição: texto cru
+    -- pós-condição: texto filtrado. Pronto para a análise de frequência
+    local text = filter_chars(str_data)
+    text = normalize(text)
+    local words = scan(text)
+    local new_words = remove_stop_words(words)
+    return new_words
 
+end
 
 function filter_chars(str_data)
     -- filtra o texto retirando os Carriage Return , virgulas e pontos
@@ -147,10 +157,7 @@ end
     TFTheOne.value = arg[1]
     print(arg[1])
     TFTheOne:bind(read_file)
-    TFTheOne:bind(filter_chars)
-    TFTheOne:bind(normalize) 
-    TFTheOne:bind(scan)
-    TFTheOne:bind(remove_stop_words)
+    TFTheOne:bind(filter_text)
     TFTheOne:bind(frequencies)
     TFTheOne:bind(sort)
     TFTheOne:bind(top25_freqs)
