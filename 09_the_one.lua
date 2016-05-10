@@ -3,37 +3,37 @@
 TFTheOne = { value=0 }
 
 
- function TFTheOne:init(self, v)
-        self._value = v
+ function TFTheOne.init(self, v)
+        self.value = v
  end
 
 
- function TFTheOne:bind(self, func)
-        self._value = func(self._value)
+ function TFTheOne.bind(self,func)
+        self.value = func(self.value)
         return self
  end
 
 
- function TFTheOne:printme(self)
+ function TFTheOne.printme(self)
         -- print self._value
  end
 -- #
 -- # The functions
 -- #
 function read_file(path_to_file)
-    -- with open(path_to_file) as f:
-    --     data = f.read()
-    -- return data
+    file = io.open(path_to_file, "r")
+    data = file:read()
+    return data
 end
 
 function filter_chars(str_data)
-    -- pattern = re.compile('[\W_]+')
-    -- return pattern.sub(' ', str_data)
+    text = str_data:gsub("[%W_]", " ")
+    return text
 end
 
 
 function normalize(str_data)
-    -- return str_data.lower()
+    return string.lower(str_data)
 end
 function scan(str_data)
     -- return str_data.split()
@@ -67,13 +67,15 @@ end
 -- #
 -- # The main function
 -- #
--- TFTheOne(sys.argv[1])\
--- .bind(read_file)\
--- .bind(filter_chars)\
--- .bind(normalize)\
--- .bind(scan)\
--- .bind(remove_stop_words)\
--- .bind(frequencies)\
--- .bind(sort)\
--- .bind(top25_freqs)\
--- .printme()
+
+    TFTheOne.value = arg[1]
+    print(arg[1])
+    TFTheOne:bind(read_file)
+    TFTheOne:bind(filter_chars)
+    TFTheOne:bind(normalize) 
+    TFTheOne:bind(scan)
+-- TFTheOne:bind(remove_stop_words)\
+-- TFTheOne:bind(frequencies)\
+-- TFTheOne:bind(sort)\
+-- TFTheOne:bind(top25_freqs)\
+-- TFTheOne:printme()
