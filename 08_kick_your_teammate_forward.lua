@@ -19,22 +19,18 @@ function read_file(path_to_file, do_after) -- filter_chars
 	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
 	text = file:read("*all")
 	assert(#text>0, "error, texto vazio")
-	do_after(text, normalize)
+	do_after(text, scan)
 end
 
-function normalize(str_data, do_after) -- scan
-	do_after(str_data:lower(), remove_stop_words)
-end
-
-function filter_chars(str_data, do_after) -- normalize
-	do_after(str_data:gsub("[%W_]", " "), scan)
+function filter_chars_and_normalize(str_data, do_after) -- scan
+	do_after(str_data:lower():gsub("[%W_]", " "), remove_stop_words)
 end
 
 function scan(str_data, do_after) -- remove_stop_words
-	do_after(reverse_split(str_data, "%S+"), frequencies)
+	do_after(reverse_split(str_data, "%S+"), sorted_frequencies)
 end
 
-function remove_stop_words(word_list, do_after) -- frequencies
+function remove_stop_words(word_list, do_after) -- sorted_frequencies
 	local stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de arquivo de stop_words")
 	local stop_words = reverse_split(stop_words_file:read("*all"), "[^,]+")
 	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
@@ -54,10 +50,10 @@ function remove_stop_words(word_list, do_after) -- frequencies
 			new_word_list[#new_word_list+1] = word
 		end
 	end
-	do_after(new_word_list, sort)
+	do_after(new_word_list, print_text)
 end
 
-function frequencies(word_list, do_after) -- sort
+function sorted_frequencies(word_list, do_after) -- print_text
 	local words_frequency = {}
 	for i=1, #word_list do
 		local word = word_list[i]
@@ -67,10 +63,7 @@ function frequencies(word_list, do_after) -- sort
 			words_frequency[word] = 1
 		end
 	end
-	do_after(words_frequency, print_text)
-end
 
-function sort(words_frequency, do_after) -- print_text
 	local word_tuples = {}
 	for word, frequency in pairs(words_frequency) do
 		word_tuples[#word_tuples+1] = {word, frequency}
@@ -98,4 +91,4 @@ function reverse_split(str, pattern)
 	return parts
 end
 
-read_file("input/words.txt", filter_chars)
+read_file("input/words.txt", filter_chars_and_normalize)

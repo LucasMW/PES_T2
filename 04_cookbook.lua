@@ -64,7 +64,7 @@ function remove_stop_words()
 	words = new_words
 end
 
-function frequencies()
+function sorted_frequencies()
 	-- conta a quantidade que o texto aparece na busca
 	-- pré-cond: texto sem stop words
 	-- pós-cond: palavras contadas num array associativo (key, frequencia)
@@ -80,24 +80,21 @@ function frequencies()
 	for word, frequency in pairs(frequency_hash) do
 		word_freqs[#word_freqs+1] = {word, frequency}
 	end
-end
 
-function sort()
--- ordena as palavras em ordem decrescente de frequencia em um array
--- pré-cond: vetor associativo de frequencia de palavras
--- pós-cond: array ordenado com as respectivas palavras e valor de frequencia
 	table.sort(word_freqs, function(word_tuple1, word_tuple2)
 		return word_tuple1[2] > word_tuple2[2]
 	end)
+end
+
+function print_text()
+	for i=1, math.min(#word_freqs, 25)  do
+		print(word_freqs[i][1] .. " " .. word_freqs[i][2]);
+	end
 end
 
 read_file()
 filter_chars_and_normalize()
 scan()
 remove_stop_words()
-frequencies()
-sort()
-
-for i=1, math.min(#word_freqs, 25)  do
-	print(word_freqs[i][1] .. " " .. word_freqs[i][2]);
-end
+sorted_frequencies()
+print_text()
