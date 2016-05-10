@@ -26,9 +26,9 @@ function filter_chars_and_normalize()
 end
 
 function scan()
-	-- lê stop words, palavras que são vazias de significado
-	-- pré-condição, lista de texto com stop words
-	-- pós-condição, table com valores de stop words
+	-- Divide o texto em um vetor de palavras
+	-- pré-condição: um texto filtrado e lowercase, porém em única string
+	-- pós-condição, uma lista de palavras que compõem o texto.
 	for word in text:gmatch("%S+") do
 		words[#words+1] = word
 	end
