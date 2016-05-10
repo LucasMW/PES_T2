@@ -12,73 +12,69 @@ function read_file(path_to_file)
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
 	-- pós-condição o texto extraído tem tamanho maior que 0
-	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
-	text = file:read("*all")
-	return text
+	local file = io.open(path_to_file)
+	return file:read("*all")
 end
 
 function filter_chars_and_normalize(str_data)
 	return str_data:lower():gsub("[%W_]", " ")
 end
 
-function scan(str_data)
-	return reverse_split(str_data, "%S+")
+function scan(text)
+	return split(text, "%S+")
 end
 
-function remove_stop_words(word_list)
-	local stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de arquivo de stop_words")
-	local stop_words = reverse_split(stop_words_file:read("*all"), "[^,]+")
+function remove_stop_words(words)
+	local file = io.open("input/stop_words.txt")
+	local stop_words = split(file:read("*all"), "[^,]+")
 	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
 	for ascii_code=48, 57 do stop_words[#stop_words+1] = string.char(ascii_code) end
 
-	local new_word_list = {}
-	for i=1, #word_list do
-		local word = word_list[i]
+	local new_words = {}
+	for i,word in ipairs(words) do
 		local are_stop_word = false
-		for j=1, #stop_words do
-			local stop_word = stop_words[j]
+		for j,stop_word in ipairs(stop_words) do
 			if word == stop_word then
 				are_stop_word = true
 				break
 			end
 		end
 		if not are_stop_word then
-			new_word_list[#new_word_list+1] = word
+			new_words[#new_words+1] = word
 		end
 	end
-	return new_word_list
+	return new_words
 end
 
-function sorted_frequencies(word_list)
-	local words_frequency = {}
-	for i=1, #word_list do
-		local word = word_list[i]
-		if words_frequency[word] then
-			words_frequency[word] = words_frequency[word] + 1
+function sorted_frequencies(words)
+	local frequency_hash = {}
+	for i,word in ipairs(words) do
+		if frequency_hash[word] then
+			frequency_hash[word] = frequency_hash[word] + 1
 		else
-			words_frequency[word] = 1
+			frequency_hash[word] = 1
 		end
 	end
 
-	local word_tuples = {}
-	for word, frequency in pairs(words_frequency) do
-		word_tuples[#word_tuples+1] = {word, frequency}
+	local word_frequencies = {}
+	for word, frequency in pairs(frequency_hash) do
+		word_frequencies[#word_frequencies+1] = {word, frequency}
 	end
-	table.sort(word_tuples, function(word_tuple1, word_tuple2)
-		return word_tuple1[2] > word_tuple2[2]
+	table.sort(word_frequencies, function(word_frequency1, word_frequency2)
+		return word_frequency1[2] > word_frequency2[2]
 	end)
-	return word_tuples
+	return word_frequencies
 end
 
-function print_text(word_tuples) -- faz nada
-	for i, word_tuple in ipairs(word_tuples) do
+function print_text(word_frequencies) -- faz nada
+	for i, word_frequency in ipairs(word_frequencies) do
 		if i > 25 then break end
-		print(table.concat(word_tuple, " - "))
+		print(table.concat(word_frequency, " - "))
 	end
 	return nil
 end
 
-function reverse_split(str, pattern)
+function split(str, pattern)
 	local iterator = str:gmatch(pattern)
 	local parts = {}
 	for part in iterator do

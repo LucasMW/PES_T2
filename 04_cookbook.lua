@@ -7,15 +7,14 @@
 
 local text = ""
 local words = {}
-local word_freqs = {}
+local word_frequencies = {}
 
 function read_file()
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
 	-- pós-condição o texto extraído tem tamanho maior que 0
-	local file = assert(io.open("input/words.txt"), "erro na abertura do arquivo")
+	local file = io.open("input/words.txt")
 	text = file:read("*all")
-	assert(#text>0, "error, texto vazio")
 end
 
 function filter_chars_and_normalize()
@@ -39,8 +38,8 @@ function remove_stop_words()
 	-- remove stop words do texto
 	-- pré-condição: texto filtrado e table de stop_words
 	-- pós-condição: texto com palavras removidas 
-	local stop_words_file = assert(io.open("input/stop_words.txt"), "erro na abertura de arquivo de stop_words")
-	local stop_words_text = stop_words_file:read("*all")
+	local file = io.open("input/stop_words.txt")
+	local stop_words_text = file:read("*all")
 	for stop_word in string.gmatch(stop_words_text, "[^,]+") do
 		for i=1, #words do
 			if words[i] == stop_word then
@@ -78,17 +77,17 @@ function sorted_frequencies()
 	end
 
 	for word, frequency in pairs(frequency_hash) do
-		word_freqs[#word_freqs+1] = {word, frequency}
+		word_frequencies[#word_frequencies+1] = {word, frequency}
 	end
 
-	table.sort(word_freqs, function(word_tuple1, word_tuple2)
-		return word_tuple1[2] > word_tuple2[2]
+	table.sort(word_frequencies, function(word_frequency1, word_frequency2)
+		return word_frequency1[2] > word_frequency2[2]
 	end)
 end
 
 function print_text()
-	for i=1, math.min(#word_freqs, 25)  do
-		print(word_freqs[i][1] .. " " .. word_freqs[i][2]);
+	for i=1, math.min(#word_frequencies, 25)  do
+		print(word_frequencies[i][1] .. " " .. word_frequencies[i][2]);
 	end
 end
 
