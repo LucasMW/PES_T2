@@ -1,19 +1,24 @@
+--[[
+	Solução no estilo Candy Factory, descrito no capítulo 5.
+
+	Este estilo de programação é derivado do paradigma funcional, onde
+	as funções não causam efeito colateral umas sobre as outras, porém
+	elas podem ser aninhadas de maneira que o valor retornado em uma
+	seja entrada de outra, até que a última função chamada tratará o
+	resultado final da maneira mais adequada.
+]]
+
 function read_file(path_to_file)
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
 	-- pós-condição o texto extraído tem tamanho maior que 0
 	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
 	text = file:read("*all")
-	assert(#text>0, "error, texto vazio")
 	return text
 end
 
-function normalize(str_data)
-	return str_data:lower()
-end
-
-function filter_chars(str_data)
-	return str_data:gsub("[%W_]", " ")
+function filter_chars_and_normalize(str_data)
+	return str_data:lower():gsub("[%W_]", " ")
 end
 
 function scan(str_data)
@@ -25,7 +30,8 @@ function remove_stop_words(word_list)
 	local stop_words = reverse_split(stop_words_file:read("*all"), "[^,]+")
 	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
 	for ascii_code=48, 57 do stop_words[#stop_words+1] = string.char(ascii_code) end
-	new_word_list = {}
+
+	local new_word_list = {}
 	for i=1, #word_list do
 		local word = word_list[i]
 		local are_stop_word = false
@@ -43,7 +49,7 @@ function remove_stop_words(word_list)
 	return new_word_list
 end
 
-function frequencies(word_list)
+function sorted_frequencies(word_list)
 	local words_frequency = {}
 	for i=1, #word_list do
 		local word = word_list[i]
@@ -53,10 +59,7 @@ function frequencies(word_list)
 			words_frequency[word] = 1
 		end
 	end
-	return words_frequency
-end
 
-function sort(words_frequency)
 	local word_tuples = {}
 	for word, frequency in pairs(words_frequency) do
 		word_tuples[#word_tuples+1] = {word, frequency}
@@ -84,4 +87,4 @@ function reverse_split(str, pattern)
 	return parts
 end
 
-print_text(sort(frequencies(remove_stop_words(scan(normalize(filter_chars(read_file("input/words.txt"))))))))
+print_text(sorted_frequencies(remove_stop_words(scan(filter_chars_and_normalize(read_file("input/words.txt"))))))

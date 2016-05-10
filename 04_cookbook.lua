@@ -1,20 +1,13 @@
--- aplicação para contar quantidades de palavras que ocorrem num texto - estilo cookbook (cap.4)
--- Pedro Nascimento - 1213243
--- Data: 03/05/2016
+--[[
+	Solução no estilo Cookbook, descrito no capítulo 4.
 
---ANOTAÇÔES
--- As maiores dificuldades foram:
--- não conhecer funções específicas de lua, 
--- trabalhar com Regxp 
--- trabalho para ordenar vetor associativo o que não pode ser feito, então tive que passar para um vetor para depois ordená-lo
+	Este estilo de programação utiliza-se de procedimentos que são executados sequencialmente alterando
+	um estado compartilhado entre eles de maneira que ao final tenhamos as informações desejadas.
+]]
 
--- O tempo total demorou 5 horas para a solução estar satisfeita
--- a estrutura da aplicação preservou bastante da notação do código do livro texto,
--- a aplicação seguiu o padrão pep8, cujo o mesmo é feito no livro texto
 local text = ""
 local words = {}
 local word_freqs = {}
-
 
 function read_file()
 	-- lê o arquivo que contém o texto alvo da aplicação
@@ -71,7 +64,7 @@ function remove_stop_words()
 	words = new_words
 end
 
-function frequencies()
+function sorted_frequencies()
 	-- conta a quantidade que o texto aparece na busca
 	-- pré-cond: texto sem stop words
 	-- pós-cond: palavras contadas num array associativo (key, frequencia)
@@ -87,24 +80,21 @@ function frequencies()
 	for word, frequency in pairs(frequency_hash) do
 		word_freqs[#word_freqs+1] = {word, frequency}
 	end
-end
 
-function sort()
--- ordena as palavras em ordem decrescente de frequencia em um array
--- pré-cond: vetor associativo de frequencia de palavras
--- pós-cond: array ordenado com as respectivas palavras e valor de frequencia
 	table.sort(word_freqs, function(word_tuple1, word_tuple2)
 		return word_tuple1[2] > word_tuple2[2]
 	end)
+end
+
+function print_text()
+	for i=1, math.min(#word_freqs, 25)  do
+		print(word_freqs[i][1] .. " " .. word_freqs[i][2]);
+	end
 end
 
 read_file()
 filter_chars_and_normalize()
 scan()
 remove_stop_words()
-frequencies()
-sort()
-
-for i=1, math.min(#word_freqs, 25)  do
-	print(word_freqs[i][1] .. " " .. word_freqs[i][2]);
-end
+sorted_frequencies()
+print_text()

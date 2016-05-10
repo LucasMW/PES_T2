@@ -1,3 +1,17 @@
+--[[
+	Solução no estilo Kick your teammate forward, descrito no capítulo 8.
+
+	Este estilo de programação é uma variação do Candy Factory, porém usando
+	o Continuous Passing Style, que é um estilo de programação funcional onde
+	nenhuma função retorna valor, porém sempre recebe outra função como parâmetro.
+	Esta função recebida como argumento será executada passando o resultado da
+	função corrente.
+
+	Tal técnica é útil na implementação de compiladores ou interpretadores, pois
+	ela dá total controle sobre o fluxo de execução já que à qualquer momento uma
+	função pode ignorar a função de continuação e mudar o fluxo de execução.
+]]
+
 function read_file(path_to_file, do_after) -- filter_chars
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
@@ -5,8 +19,9 @@ function read_file(path_to_file, do_after) -- filter_chars
 	file = assert(io.open(path_to_file), "erro na abertura do arquivo")
 	text = file:read("*all")
 	assert(#text>0, "error, texto vazio")
-	do_after(text, normalize)
+	do_after(text, scan)
 end
+
 
 function filter_chars(str_data, do_after) -- normalize
 	-- filtra o texto retirando os caracters Return , virgula e ponto
@@ -69,6 +84,7 @@ function frequencies(word_list, do_after) -- sort
 	--  na table recebida
 	-- pré-condição a table tem tamanho maior que 0
 	-- pós-condição a table tem tamanho maior que 0, apenas com valores positivos
+
 	local words_frequency = {}
 	for i=1, #word_list do
 		local word = word_list[i]
@@ -128,4 +144,4 @@ function reverse_split(str, pattern)
 	return parts
 end
 
-read_file("input/words.txt", filter_chars)
+read_file("input/words.txt", filter_chars_and_normalize)
