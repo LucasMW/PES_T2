@@ -9,6 +9,64 @@ local text = ""
 local words = {}
 local word_frequencies = {}
 
+filter_text = (function()
+	local function filter_chars()
+		-- filtra o texto retirando os Carriage Return , virgulas e pontos
+		-- pré condição: texto cru
+		-- pós-condição: texto filtrado
+		text = text:gsub("[%W_]", " ")
+	end
+
+	local function normalize()
+		text = string.lower(text)
+	end
+
+	local function scan()
+		-- Divide o texto em um vetor de palavras
+		-- pré-condição: um texto filtrado e lowercase, porém em única string
+		-- pós-condição, uma lista de palavras que compõem o texto.
+		for word in text:gmatch("%S+") do
+			words[#words+1] = word
+		end
+	 end
+
+	local function remove_stop_words()
+		-- remove stop words do texto
+		-- pré-condição: texto filtrado e table de stop_words
+		-- pós-condição: texto com palavras removidas 
+		local file = io.open("input/stop_words.txt")
+		local stop_words_text = file:read("*all")
+		for stop_word in string.gmatch(stop_words_text, "[^,]+") do
+			for i=1, #words do
+				if words[i] == stop_word then
+					words[i] = ""
+				end
+			end
+		end
+
+		for i=1, #words do
+			if #words[i] == 1 then
+				words[i] = nil
+			end
+		end
+
+		local new_words = {}
+		for i,word in pairs(words) do
+			if word ~= "" then
+				new_words[#new_words+1] = word
+			end
+		end
+		words = new_words
+	end
+
+	return function()
+		filter_chars()
+		normalize()
+		scan()
+		remove_stop_words()
+	end
+end)()
+
 function read_file()
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
@@ -17,53 +75,7 @@ function read_file()
 	text = file:read("*all")
 end
 
-function filter_chars_and_normalize()
-	-- filtra o texto retirando os Carriage Return , virgulas e pontos
-	-- pré condição: texto cru
-	-- pós-condição: texto filtrado
-	text = string.lower(text)
-	text = text:gsub("[%W_]", " ")
-end
-
-function scan()
-	-- Divide o texto em um vetor de palavras
-	-- pré-condição: um texto filtrado e lowercase, porém em única string
-	-- pós-condição, uma lista de palavras que compõem o texto.
-	for word in text:gmatch("%S+") do
-		words[#words+1] = word
-	end
- end
-
-function remove_stop_words()
-	-- remove stop words do texto
-	-- pré-condição: texto filtrado e table de stop_words
-	-- pós-condição: texto com palavras removidas 
-	local file = io.open("input/stop_words.txt")
-	local stop_words_text = file:read("*all")
-	for stop_word in string.gmatch(stop_words_text, "[^,]+") do
-		for i=1, #words do
-			if words[i] == stop_word then
-				words[i] = ""
-			end
-		end
-	end
-
-	for i=1, #words do
-		if #words[i] == 1 then
-			words[i] = nil
-		end
-	end
-
-	local new_words = {}
-	for i,word in pairs(words) do
-		if word ~= "" then
-			new_words[#new_words+1] = word
-		end
-	end
-	words = new_words
-end
-
-function sorted_frequencies()
+function frequencies()
 	-- conta a quantidade que o texto aparece na busca
 	-- pré-cond: texto sem stop words
 	-- pós-cond: palavras contadas num array associativo (key, frequencia)
@@ -79,7 +91,9 @@ function sorted_frequencies()
 	for word, frequency in pairs(frequency_hash) do
 		word_frequencies[#word_frequencies+1] = {word, frequency}
 	end
+end
 
+function sort()
 	table.sort(word_frequencies, function(word_frequency1, word_frequency2)
 		return word_frequency1[2] > word_frequency2[2]
 	end)
@@ -92,8 +106,7 @@ function print_text()
 end
 
 read_file()
-filter_chars_and_normalize()
-scan()
-remove_stop_words()
-sorted_frequencies()
+filter_text()
+frequencies()
+sort()
 print_text()

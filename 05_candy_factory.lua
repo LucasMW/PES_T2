@@ -8,6 +8,46 @@
 	resultado final da maneira mais adequada.
 ]]
 
+filter_text = (function()
+	local function filter_chars(text)
+		return text:gsub("[%W_]", " ")
+	end
+
+	local function normalize(text)
+		return text:lower()
+	end
+
+	local function scan(text)
+		return split(text, "%S+")
+	end
+
+	local function remove_stop_words(words)
+		local file = io.open("input/stop_words.txt")
+		local stop_words = split(file:read("*all"), "[^,]+")
+		for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
+		for ascii_code=48, 57 do stop_words[#stop_words+1] = string.char(ascii_code) end
+
+		local new_words = {}
+		for i,word in ipairs(words) do
+			local are_stop_word = false
+			for j,stop_word in ipairs(stop_words) do
+				if word == stop_word then
+					are_stop_word = true
+					break
+				end
+			end
+			if not are_stop_word then
+				new_words[#new_words+1] = word
+			end
+		end
+		return new_words
+	end
+
+	return function(text)
+		return remove_stop_words(scan(normalize(filter_chars(text))))
+	end
+end)()
+
 function read_file(path_to_file)
 	-- lê o arquivo que contém o texto alvo da aplicação
 	-- pré-condição a abertura do arquivo está correta
@@ -16,37 +56,7 @@ function read_file(path_to_file)
 	return file:read("*all")
 end
 
-function filter_chars_and_normalize(str_data)
-	return str_data:lower():gsub("[%W_]", " ")
-end
-
-function scan(text)
-	return split(text, "%S+")
-end
-
-function remove_stop_words(words)
-	local file = io.open("input/stop_words.txt")
-	local stop_words = split(file:read("*all"), "[^,]+")
-	for ascii_code=97, 122 do stop_words[#stop_words+1] = string.char(ascii_code) end
-	for ascii_code=48, 57 do stop_words[#stop_words+1] = string.char(ascii_code) end
-
-	local new_words = {}
-	for i,word in ipairs(words) do
-		local are_stop_word = false
-		for j,stop_word in ipairs(stop_words) do
-			if word == stop_word then
-				are_stop_word = true
-				break
-			end
-		end
-		if not are_stop_word then
-			new_words[#new_words+1] = word
-		end
-	end
-	return new_words
-end
-
-function sorted_frequencies(words)
+function frequencies(words)
 	local frequency_hash = {}
 	for i,word in ipairs(words) do
 		if frequency_hash[word] then
@@ -60,6 +70,10 @@ function sorted_frequencies(words)
 	for word, frequency in pairs(frequency_hash) do
 		word_frequencies[#word_frequencies+1] = {word, frequency}
 	end
+	return word_frequencies
+end
+
+function sort(word_frequencies)
 	table.sort(word_frequencies, function(word_frequency1, word_frequency2)
 		return word_frequency1[2] > word_frequency2[2]
 	end)
@@ -83,4 +97,4 @@ function split(str, pattern)
 	return parts
 end
 
-print_text(sorted_frequencies(remove_stop_words(scan(filter_chars_and_normalize(read_file("input/words.txt"))))))
+print_text(sort(frequencies(filter_text(read_file("input/words.txt")))))
